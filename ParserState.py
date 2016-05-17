@@ -1,0 +1,9 @@
+Idle          = 0
+ReadType      = 1
+ReadHash      = 2
+ReadProperty  = 3
+ReadName      = 4
+WhichMode     = 5
+QuotationMode = 6
+BracketMode   = 7
+WaitComma     = 8

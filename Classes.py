@@ -20,21 +20,31 @@ class Literature:
 class DataBase:
     LiteratureList = []
     CommentList = []
-    HasNoError = False
     FileName = ''
     Encoding = ''
 
-    def __init__(self, FileName, Encoding = 'utf-8'):
+    def __init__(self):
+        self.LiteratureList = []
+        self.CommentList = []
+        self.FileName = ''
+        self.Encoding = ''
+
+    def Load(self, FileName, Encoding = 'utf-8'):
+        self.LiteratureList = []
+        self.CommentList = []
+
         self.Encoding = Encoding
-        if os.path.isfile(FileName):
-            self.FileName = FileName
-            if not BibTeXParse(FileName, self.LiteratureList, self.CommentList, Encoding):
-                self.LiteratureList.clear()
-                self.CommentList.clear()
-            else:
-                self.HasNoError = True
-        else:
-            pass
+        if not os.path.isfile(FileName):
+            return False
+
+        self.FileName = FileName
+        if not BibTeXParse(FileName, self.LiteratureList, self.CommentList, Encoding):
+            self.LiteratureList.clear()
+            self.CommentList.clear()
+            return False
+
+        return True
+
 
     def Save(self, FileName = '', Encoding = ''):
         if FileName == '':

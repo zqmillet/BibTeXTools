@@ -1,8 +1,8 @@
-from BibTeXParser import BibTeXParse
+import Classes
 
 FileName = 'References.bib'
-LiteratureList = []
-if BibTeXParse(FileName, LiteratureList):
-    print(LiteratureList)
-else:
-    print('Error!')
+BibTeXDataBase = Classes.DataBase(FileName)
+if BibTeXDataBase.HasNoError:
+    print('DataBase has been loaded!')
+
+BibTeXDataBase.Save('Test.bib')

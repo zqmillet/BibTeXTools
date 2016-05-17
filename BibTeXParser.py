@@ -3,8 +3,8 @@ import ParserState
 import CharList
 import Classes
 
-def BibTeXParse(FileName, LiteratureList):
-    BibTeXFile = open(FileName, 'r', encoding='utf-8')
+def BibTeXParse(FileName, LiteratureList, CommentList, Encoding = 'utf-8'):
+    BibTeXFile = open(FileName, 'r', encoding = Encoding)
 
     LiteratureType = ''
     LiteratureHash = ''
@@ -19,6 +19,7 @@ def BibTeXParse(FileName, LiteratureList):
     State = ParserState.Idle
 
     LiteratureList.clear()
+    CommentList.clear()
 
     BibTeXString = BibTeXFile.read()
     BibTeXFile.close()
@@ -41,10 +42,13 @@ def BibTeXParse(FileName, LiteratureList):
                 LiteratureHash = ''
         elif State == ParserState.ReadType:
             if Char == '{':
-                State = ParserState.ReadHash
-                BraceNumber = 1
                 LiteratureType = BibTeXString[SaveCharIndex + 1:CharIndex]
                 SaveCharIndex = CharIndex
+                BraceNumber = 1
+                if LiteratureType.lower() == 'comment':
+                    State = ParserState.ReadComment
+                else:
+                    State = ParserState.ReadHash
             elif Char in CharList.IllegalCharOfType:
                 print(ErrorMessage.IllegalCharInType.format(LineIndex, Char))
                 return False
@@ -60,6 +64,14 @@ def BibTeXParse(FileName, LiteratureList):
                 print(ErrorMessage.IllegalCharInHash.format(LineIndex, Char))
                 return False
             pass
+        elif State == ParserState.ReadComment:
+            if Char == '{':
+                BraceNumber += 1
+            elif Char == '}':
+                BraceNumber -= 1
+                if BraceNumber == 0:
+                    CommentList.append(BibTeXString[SaveCharIndex + 1:CharIndex])
+                    State = ParserState.Idle
         else:  # State == ParserState.ReadProperty
             if Char == '{':
                 BraceNumber += 1
@@ -134,9 +146,10 @@ def PropertyParse(PropertyString, PropertyList, LineIndex = 0):
                 SaveCharIndex = CharIndex
             elif Char == '"':
                 State = ParserState.QuotationMode
+                SaveCharIndex = CharIndex
             else:
-                print(ErrorMessage.IllegalCharAfterEqualSign.format(LineIndex, Char))
-                return False
+                State = ParserState.NoneMode
+                SaveCharIndex = CharIndex
         elif State == ParserState.BracketMode:
             if Char == '{':
                 BracketNumber += 1
@@ -145,6 +158,12 @@ def PropertyParse(PropertyString, PropertyList, LineIndex = 0):
                 if BracketNumber == 0:
                     PropertyList[Name] = PropertyString[SaveCharIndex + 1:CharIndex]
                     State = ParserState.WaitComma
+            else:
+                pass
+        elif State == ParserState.NoneMode:
+            if Char == ',':
+                PropertyList[Name] = PropertyString[SaveCharIndex:CharIndex]
+                State = ParserState.Idle
             else:
                 pass
         elif State == ParserState.QuotationMode:
@@ -162,6 +181,9 @@ def PropertyParse(PropertyString, PropertyList, LineIndex = 0):
 
         OldChar = Char
         CharIndex += 1
+
+    if State == ParserState.NoneMode:
+        PropertyList[Name] = PropertyString[SaveCharIndex:CharIndex]
 
     return True
 

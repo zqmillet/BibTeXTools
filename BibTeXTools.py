@@ -1,14 +1,18 @@
-import os,sys
+import sys
 import getopt
+import Classes
 
 def PrintUsage():
     print('Usage:')
     print('  BibTeXTools [options] BibTeXFileName.bib')
     print('  BibTeXTools BibTeXFileName.bib [options]')
     print('Options:')
-    print('  -v, --version : show the version.')
-    print('  -h, --help    : show the usage.')
-    print('  -o, --output  : set the output file name.')
+    print('  -v, --version         : show the version.')
+    print('  -h, --help            : show the usage.')
+    print('  -o, --output=Name     : set the output file name.')
+    print('  -d, --delete=NameList : delete the property whose name is in NameList of each')
+    print('                          literature.')
+    print('  -l, --log=LogFile     : save the log.')
 
 def PrintSyntaxError():
     print('Syntax Error!\n')
@@ -29,23 +33,55 @@ else:
     pass
 
 # Analyze the arguments
+Options = {}
+Arguments = []
 try:
-    opts, args = getopt.getopt(ParameterList, 'ho:v', ['help', 'output=', 'version'])
+    Options, Arguments = getopt.getopt(ParameterList, 'ho:vd:e:', ['help', 'output=', 'version', 'delete=', 'encoding='])
 except getopt.GetoptError:
     PrintSyntaxError()
     PrintUsage()
     exit()
 
-# If there is no required argument, exit
-if len(args) != 1:
+# Obtain the BibTeXFileName
+if len(Arguments) != 1:
     BibTeXFileName = ''
 else:
-    # Obtain the BibTeXFileName
-    BibTeXFileName = args[0]
+    BibTeXFileName = Arguments[0]
+
+OutputFileName = BibTeXFileName
+BibTeXDataBase = Classes.DataBase()
+Encoding = ''
 
 # Do something according to the arguments
-for name, value in opts:
-    if name in ['-h', '--help']:
+DoneList = []
+for Name, Value in Options:
+    if Name.lower() in ['-h', '--help']:
         PrintUsage()
-    elif name in ['-v', '--version']:
+        DoneList.append(Name)
+    elif Name.lower() in ['-v', '--version']:
         PrintVersion()
+        DoneList.append(Name)
+    elif Name.lower() in ['-o', '--output']:
+        OutputFileName = Value
+        DoneList.append(Name)
+    elif Name.lower in ['-e', '--encoding']:
+        Encoding = Value
+        DoneList.append(Name)
+
+for Name, Value in Options:
+    if Name in DoneList:
+        continue
+
+    if Name.lower() in ['-d', '--delete']:
+        if not BibTeXDataBase.Load(BibTeXFileName):
+            exit()
+
+        NameList = Value.split(',')
+        for Index in range(0, len(NameList)):
+            NameList[Index] = NameList[Index].strip()
+        BibTeXDataBase.DeleteProperty(NameList)
+        BibTeXDataBase.Save(OutputFileName)
+    else:
+        PrintSyntaxError()
+        PrintUsage()
+        exit()

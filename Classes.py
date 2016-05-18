@@ -29,22 +29,28 @@ class DataBase:
         self.FileName = ''
         self.Encoding = ''
 
-    def Load(self, FileName, Encoding = 'utf-8'):
+    def Load(self, FileName, Encoding = ''):
         self.LiteratureList = []
         self.CommentList = []
+        self.FileName = FileName
 
-        self.Encoding = Encoding
-        if not os.path.isfile(FileName):
+        if Encoding == '':
+            self.Encoding = 'utf-8'
+        else:
+            self.Encoding = Encoding
+
+
+        if not os.path.isfile(self.FileName):
+            print('The file "{0}" does not exist!'.format(self.FileName))
             return False
 
         self.FileName = FileName
-        if not BibTeXParse(FileName, self.LiteratureList, self.CommentList, Encoding):
+        if not BibTeXParse(FileName, self.LiteratureList, self.CommentList, self.Encoding):
             self.LiteratureList.clear()
             self.CommentList.clear()
             return False
 
         return True
-
 
     def Save(self, FileName = '', Encoding = ''):
         if FileName == '':
@@ -63,7 +69,6 @@ class DataBase:
                 if len(Name) > MaxNameLength:
                     MaxNameLength = len(Name)
 
-
         for Literature in self.LiteratureList:
             LiteratureString = '@' + Literature.Type + '{' + Literature.Hash + ',\n'
             for Name in Literature.PropertyList:
@@ -79,3 +84,9 @@ class DataBase:
         BibTeXFile = open(FileName, 'w', encoding = Encoding)
         BibTeXFile.write(BibTeXString)
         BibTeXFile.close()
+
+    def DeleteProperty(self, PropertyNameList):
+        for Literature in self.LiteratureList:
+            for Name in PropertyNameList:
+                if Name in Literature.PropertyList:
+                    del Literature.PropertyList[Name]

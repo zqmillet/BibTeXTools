@@ -2,8 +2,7 @@ import os,sys
 import getopt
 
 def PrintUsage():
-    PrintVersion()
-    print('\nUsage:')
+    print('Usage:')
     print('  BibTeXTools [options] BibTeXFileName.bib')
     print('  BibTeXTools BibTeXFileName.bib [options]')
     print('Options:')
@@ -20,6 +19,7 @@ def PrintVersion():
 # Order the arguments
 ParameterList = sys.argv[1:]
 if len(ParameterList) == 0:
+    PrintVersion()
     PrintUsage()
     exit()
 elif ParameterList[0][0] != '-':

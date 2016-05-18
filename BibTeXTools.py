@@ -36,7 +36,8 @@ else:
 Options = {}
 Arguments = []
 try:
-    Options, Arguments = getopt.getopt(ParameterList, 'ho:vd:e:', ['help', 'output=', 'version', 'delete=', 'encoding='])
+    Options, Arguments = getopt.getopt(ParameterList, 'ho:vd:e:', \
+                                       ['help', 'output=', 'version', 'delete=', 'encoding='])
 except getopt.GetoptError:
     PrintSyntaxError()
     PrintUsage()
@@ -64,7 +65,7 @@ for Name, Value in Options:
     elif Name.lower() in ['-o', '--output']:
         OutputFileName = Value
         DoneList.append(Name)
-    elif Name.lower in ['-e', '--encoding']:
+    elif Name.lower() in ['-e', '--encoding']:
         Encoding = Value
         DoneList.append(Name)
 

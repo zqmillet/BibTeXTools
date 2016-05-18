@@ -1,0 +1,25 @@
+%!TEX program = xelatex
+%!TEX builder = latexmk
+
+\documentclass[10pt,openany,landscape]{ctexbook}
+\usepackage[hmargin={0cm},vmargin={0cm}]{geometry}%
+\usepackage{tikz}
+\usepackage[active,tightpage]{preview}
+\usepackage{amsfonts}
+\usepackage{dsfont}
+
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{0pt}
+\setmonofont{Consolas}
+
+\begin{document}
+\def\logo{$\mathds{B}i$\raisebox{0.05pt}{\scalebox{0.64}{B}}\TeX{}T$\infty\ell s$}
+
+\begin{tikzpicture}[line width = 1pt]
+  \node[anchor = west] at (0, 0) {\logo};
+  \begin{scope}[fill=black]
+    \fill[clip] (0.1, -0.2) rectangle (1.21,0.2);
+    \node[anchor = west, text = white] at (0, 0) {\logo};
+  \end{scope}
+\end{tikzpicture}
+\end{document}

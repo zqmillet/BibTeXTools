@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# logo
+.aux
+.fdb_latexmk
+.fls
+logo.log
+.synctex.gz

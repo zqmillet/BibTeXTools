@@ -1,4 +1,4 @@
-<img src = "./Logo/Logo.png" width = 190pt />
+<img src = "./Logo/Logo.png" width = 250pt />
 
 **BibTeXTools** is designed to process BibTeX file in batches.
 
@@ -15,10 +15,10 @@ A typical BibTeX file is shown as follows.
 ## Usage
 ### Syntax
 
-  BibTeXTools.py [options] BibTeXFileName.bib
+    BibTeXTools.py [options] BibTeXFileName.bib
 or
 
-  BibTeXTools.py BibTeXFileName.bib [options]
+    BibTeXTools.py BibTeXFileName.bib [options]
 
 ### Options
 * `-v`, `--version`:<br> show the version of **BibTeXTools**;

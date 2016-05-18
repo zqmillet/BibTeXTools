@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="40507388-0cd7-4882-8b6b-2f0c50fe31df" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BibTeXTools.py" afterPath="$PROJECT_DIR$/BibTeXTools.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Qiqi.bib" afterPath="$PROJECT_DIR$/Qiqi.bib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Readme.md" afterPath="$PROJECT_DIR$/Readme.md" />
     </list>
     <ignored path="BibTeXParser.iws" />
     <ignored path=".idea/workspace.xml" />

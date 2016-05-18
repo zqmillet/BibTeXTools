@@ -41,14 +41,19 @@ Delete all the `ISSN`, `Year`, and `Owner` properties of each literature in the 
 
     BibTeXTools.py -d "ISSN, Year, Owner" References.bib
 
-## Built With
+## Built with
 
 * Python 3.5
 * PyCharm 2016.1.3
 
+## To Do
+* Obtain the impact factor of literature according to the property `ISSN`.
+* Obtain the full paper of literature accroding to the property `Doi` or `Url`.
+* Remove redundant literatures.
+
 ## License
 
-This project is licensed under the MIT License. See the [License.md](License.md) file for details
+This project is licensed under the MIT License. See the [License.md](License.md) file for details.
 
 ## Acknowledgments
 I would like to thank the anonymous referees for their helpful comments and suggestions.

@@ -89,8 +89,8 @@ ENV/
 .ropeproject
 
 # logo
-.aux
-.fdb_latexmk
-.fls
+*.aux
+*.fdb_latexmk
+*.fls
 logo.log
-.synctex.gz
+*.synctex.gz

@@ -41,6 +41,10 @@ Delete all the `ISSN`, `Year`, and `Owner` properties of each literature in the 
 
     BibTeXTools.py -d "ISSN, Year, Owner" References.bib
 
+Delete all the `ISSN`, `Year`, and `Owner` properties of each literature in the `References.bib`, and save the log to the file `References.log`.
+
+    BibTeXTools.py -d "ISSN, Year, Owner"  -l References.log References.bib
+
 ## Built with
 
 * Python 3.5

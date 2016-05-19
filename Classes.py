@@ -1,5 +1,6 @@
 from BibTeXParser import BibTeXParse
 import os
+import time
 
 class Literature:
     Type = ''
@@ -17,17 +18,22 @@ class Literature:
         for Name in self.PropertyList:
             print('{0} = {1}'.format(Name, self.PropertyList[Name]))
 
+
 class DataBase:
     LiteratureList = []
     CommentList = []
     FileName = ''
     Encoding = ''
+    CommitList = []
 
     def __init__(self):
         self.LiteratureList = []
         self.CommentList = []
         self.FileName = ''
         self.Encoding = ''
+        self.CommitList = []
+
+
 
     def Load(self, FileName, Encoding = ''):
         self.LiteratureList = []
@@ -85,8 +91,16 @@ class DataBase:
         BibTeXFile.write(BibTeXString)
         BibTeXFile.close()
 
+    def Commit(self, CommitMessage):
+        self.CommitList.append(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) +
+                         ': ' + CommitMessage)
+
     def DeleteProperty(self, PropertyNameList):
-        for Literature in self.LiteratureList:
+        self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(PropertyNameList) + '"', self.FileName))
+        for Literature in self.LiteratureList:f
             for Name in PropertyNameList:
                 if Name in Literature.PropertyList:
                     del Literature.PropertyList[Name]
+                    self.Commit('|-Delete {0} property from {1} {2}.'.format(Name, Literature.Type, Literature.Hash))
+
+

@@ -36,8 +36,14 @@ else:
 Options = {}
 Arguments = []
 try:
-    Options, Arguments = getopt.getopt(ParameterList, 'ho:vd:e:', \
-                                       ['help', 'output=', 'version', 'delete=', 'encoding='])
+    Options, Arguments = getopt.getopt(ParameterList,
+                                       'ho:vd:e:l:',
+                                       ['help',
+                                        'output=',
+                                        'version',
+                                        'delete=',
+                                        'encoding=',
+                                        'log='])
 except getopt.GetoptError:
     PrintSyntaxError()
     PrintUsage()
@@ -52,22 +58,26 @@ else:
 OutputFileName = BibTeXFileName
 BibTeXDataBase = Classes.DataBase()
 Encoding = ''
+SaveLogFile = False
+LogFileName = ''
 
 # Do something according to the arguments
 DoneList = []
 for Name, Value in Options:
+    DoneList.append(Name)
     if Name.lower() in ['-h', '--help']:
         PrintUsage()
-        DoneList.append(Name)
     elif Name.lower() in ['-v', '--version']:
         PrintVersion()
-        DoneList.append(Name)
     elif Name.lower() in ['-o', '--output']:
         OutputFileName = Value
-        DoneList.append(Name)
     elif Name.lower() in ['-e', '--encoding']:
         Encoding = Value
-        DoneList.append(Name)
+    elif Name.lower() in ['-l', '--log']:
+        SaveLogFile = True
+        LogFileName = Value
+    else:
+        DoneList.remove(Name)
 
 for Name, Value in Options:
     if Name in DoneList:
@@ -86,3 +96,9 @@ for Name, Value in Options:
         PrintSyntaxError()
         PrintUsage()
         exit()
+
+if SaveLogFile:
+    LogFile = open(LogFileName, 'w', encoding='utf-8')
+    for Commit in BibTeXDataBase.CommitList:
+        LogFile.write(Commit + '\n')
+    LogFile.close()

@@ -37,10 +37,11 @@ Options = {}
 Arguments = []
 try:
     Options, Arguments = getopt.getopt(ParameterList,
-                                       'ho:vd:e:l:',
+                                       'hvuo:d:e:l:',
                                        ['help',
-                                        'output=',
                                         'version',
+                                        'geturl',
+                                        'output=',
                                         'delete=',
                                         'encoding=',
                                         'log='])
@@ -79,25 +80,32 @@ for Name, Value in Options:
     else:
         DoneList.remove(Name)
 
+if not BibTeXDataBase.Load(BibTeXFileName):
+    exit()
+
 for Name, Value in Options:
     if Name in DoneList:
         continue
 
     if Name.lower() in ['-d', '--delete']:
-        if not BibTeXDataBase.Load(BibTeXFileName):
-            exit()
-
         NameList = Value.split(',')
         for Index in range(0, len(NameList)):
             NameList[Index] = NameList[Index].strip()
         BibTeXDataBase.DeleteProperty(NameList)
-        BibTeXDataBase.Save(OutputFileName)
+    elif Name.lower() in ['-u', '--geturl']:
+        BibTeXDataBase.GetURL()
     else:
         PrintSyntaxError()
         PrintUsage()
         exit()
 
+BibTeXDataBase.Save(OutputFileName)
+
 if SaveLogFile:
+    if LogFileName == '':
+        print()
+        exit()
+
     LogFile = open(LogFileName, 'w', encoding='utf-8')
     for Commit in BibTeXDataBase.CommitList:
         LogFile.write(Commit + '\n')

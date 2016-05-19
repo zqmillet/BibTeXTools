@@ -1,6 +1,7 @@
 from BibTeXParser import BibTeXParse
 import os
 import time
+import requests
 
 class Literature:
     Type = ''
@@ -33,8 +34,6 @@ class DataBase:
         self.Encoding = ''
         self.CommitList = []
 
-
-
     def Load(self, FileName, Encoding = ''):
         self.LiteratureList = []
         self.CommentList = []
@@ -56,6 +55,9 @@ class DataBase:
             self.CommentList.clear()
             return False
 
+        self.Commit('Database {0} has been loaded.'.format(self.FileName))
+        self.Commit('|-The number of literature in {0} is {1}.'.format(self.FileName, len(self.LiteratureList)))
+        self.Commit('|-The encoding is {0}.'.format(self.Encoding))
         return True
 
     def Save(self, FileName = '', Encoding = ''):
@@ -91,9 +93,12 @@ class DataBase:
         BibTeXFile.write(BibTeXString)
         BibTeXFile.close()
 
+        self.Commit('The database has been saved as {0}.'.format(FileName))
+
     def Commit(self, CommitMessage):
         self.CommitList.append(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) +
                          ': ' + CommitMessage)
+        print(CommitMessage)
 
     def DeleteProperty(self, PropertyNameList):
         self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(PropertyNameList) + '"', self.FileName))
@@ -103,4 +108,29 @@ class DataBase:
                     del Literature.PropertyList[Name]
                     self.Commit('|-Delete {0} property from {1} {2}.'.format(Name, Literature.Type, Literature.Hash))
 
+    def GetURL(self):
+        self.Commit('Fetch URL for all literature.')
+        TimeOut = 1
+        for Literature in self.LiteratureList:
+            if 'Url' in Literature.PropertyList:
+                self.Commit('|-There is already URL property in literature {0}.'.format(Literature.Hash))
+            else:
+                if 'Doi' in Literature.PropertyList:
+                    URL = 'http://dx.doi.org/' + Literature.PropertyList['Doi']
+                    while True:
+                        try:
+                            # print('TimeOut = {0}, URL = {1}'.format(TimeOut, URL))
+                            Request = requests.get(URL, timeout=TimeOut)
+                            Literature.PropertyList['Url'] = Request.url
+                            break
+                        except:
+                            TimeOut += 1
+
+                        if TimeOut > 10:
+                            self.Commit('|-No response from {0}, try other servers.'.format('http://dx.doi.org/'))
+                            TimeOut = 1
+                            break
+                    self.Commit('|-URL property has been added in literature {0}.'.format(Literature.Hash))
+                else:
+                    self.Commit('|-There is no DOI property in literature {0}. Try Title property.'.format(Literature.Hash))
 

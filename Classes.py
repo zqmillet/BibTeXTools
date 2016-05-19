@@ -106,14 +106,14 @@ class DataBase:
             for Name in PropertyNameList:
                 if Name in Literature.PropertyList:
                     del Literature.PropertyList[Name]
-                    self.Commit('|-Delete {0} property from {1} {2}.'.format(Name, Literature.Type, Literature.Hash))
+                    self.Commit('|-Delete "{0}" property from {1} {2}.'.format(Name, Literature.Type, Literature.Hash))
 
     def GetURL(self):
-        self.Commit('Fetch URL for all literature.')
+        self.Commit('Fetch "Url" for all literature.')
         TimeOut = 1
         for Literature in self.LiteratureList:
             if 'Url' in Literature.PropertyList:
-                self.Commit('|-There is already URL property in literature {0}.'.format(Literature.Hash))
+                self.Commit('|-There is already "Url" property in literature {0}.'.format(Literature.Hash))
             else:
                 if 'Doi' in Literature.PropertyList:
                     URL = 'http://dx.doi.org/' + Literature.PropertyList['Doi']
@@ -130,7 +130,7 @@ class DataBase:
                             self.Commit('|-No response from {0}, try other servers.'.format('http://dx.doi.org/'))
                             TimeOut = 1
                             break
-                    self.Commit('|-URL property has been added in literature {0}.'.format(Literature.Hash))
+                    self.Commit('|-"Url" property has been added in literature {0}.'.format(Literature.Hash))
                 else:
-                    self.Commit('|-There is no DOI property in literature {0}. Try Title property.'.format(Literature.Hash))
+                    self.Commit('|-There is no "Doi" property in literature {0}. Try Title property.'.format(Literature.Hash))
 

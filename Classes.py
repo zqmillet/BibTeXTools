@@ -97,7 +97,7 @@ class DataBase:
 
     def DeleteProperty(self, PropertyNameList):
         self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(PropertyNameList) + '"', self.FileName))
-        for Literature in self.LiteratureList:f
+        for Literature in self.LiteratureList:
             for Name in PropertyNameList:
                 if Name in Literature.PropertyList:
                     del Literature.PropertyList[Name]

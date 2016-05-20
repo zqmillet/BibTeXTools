@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="40507388-0cd7-4882-8b6b-2f0c50fe31df" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logo/Logo.pdf" afterPath="$PROJECT_DIR$/Logo/Logo.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logo/Logo.png" afterPath="$PROJECT_DIR$/Logo/Logo.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logo/Logo.tex" afterPath="$PROJECT_DIR$/Logo/Logo.tex" />
-    </list>
+    <list default="true" id="40507388-0cd7-4882-8b6b-2f0c50fe31df" name="Default" comment="" />
     <ignored path="BibTeXParser.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -402,7 +397,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="916" height="1416" extended-state="7" />
+    <frame x="-8" y="-8" width="916" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />

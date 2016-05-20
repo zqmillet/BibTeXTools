@@ -93,7 +93,7 @@ Then the log is shown as follows.
 ## To Do
 * Add the function which can fetch the impact factor of entry according to the tag `ISSN`.
 * Add the function which can fetch the full paper of entry accroding to the tags `Doi`, `Url` or `Title`.
-* Add the funtion which can remove redundant entries.
+* Add the function which can remove redundant entries.
 
 ## License
 This project is licensed under the MIT License. See the [License.md](License.md) file for details.

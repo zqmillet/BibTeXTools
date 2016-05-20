@@ -1,6 +1,6 @@
-IllegalCharOfType  = r''' 0123456789,./;'<>?:"\|!@#$%^&*()[]}-='''
-IllegalCharOfHash  = r''' /;'<>?:"\\|()[]{}='''
+IllegalCharOfEntryType        = r''' 0123456789,./;'<>?:"\|!@#$%^&*()[]}-='''
+IllegalCharOfEntryCitationKey = r''' /;'<>?:"\\|()[]{}='''
 
-IllegalCharOfName  = r'''0123456789,./;'<>?:"\|!@#$%^&*()[]}-'''
+IllegalCharOfTagName          = r'''0123456789,./;'<>?:"\|!@#$%^&*()[]}-'''
 
-EmptyChar          = ' \n\r'
+EmptyChar                     = ' \n\r'

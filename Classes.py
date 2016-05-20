@@ -3,39 +3,39 @@ import os
 import time
 import requests
 
-class Literature:
+class Entry:
     Type = ''
-    Hash = ''
-    PropertyList = {}
+    CitationKey = ''
+    TagList = {}
 
-    def __init__(self, Type, Hash):
+    def __init__(self, Type, CitationKey):
         self.Type = Type
-        self.Hash = Hash
-        self.PropertyList = {}
+        self.CitationKey = CitationKey
+        self.TagList = {}
 
     def Print(self):
-        print('Literature Type = {0}'.format(self.Type))
-        print('Literature Hash = {0}'.format(self.Hash))
-        for Name in self.PropertyList:
-            print('{0} = {1}'.format(Name, self.PropertyList[Name]))
+        print('Entry Type = {0}'.format(self.Type))
+        print('Entry Citation Key = {0}'.format(self.CitationKey))
+        for TagName in self.TagList:
+            print('{0} = {1}'.format(TagName, self.TagList[TagName]))
 
 
 class DataBase:
-    LiteratureList = []
+    EntryList = []
     CommentList = []
     FileName = ''
     Encoding = ''
     CommitList = []
 
     def __init__(self):
-        self.LiteratureList = []
+        self.EntryList = []
         self.CommentList = []
         self.FileName = ''
         self.Encoding = ''
         self.CommitList = []
 
     def Load(self, FileName, Encoding = ''):
-        self.LiteratureList = []
+        self.EntryList = []
         self.CommentList = []
         self.FileName = FileName
 
@@ -44,27 +44,26 @@ class DataBase:
         else:
             self.Encoding = Encoding
 
-
         if not os.path.isfile(self.FileName):
             print('The file "{0}" does not exist!'.format(self.FileName))
             return False
 
         self.FileName = FileName
-        if not BibTeXParse(FileName, self.LiteratureList, self.CommentList, self.Encoding):
-            self.LiteratureList.clear()
+        if not BibTeXParse(FileName, self.EntryList, self.CommentList, self.Encoding):
+            self.EntryList.clear()
             self.CommentList.clear()
             return False
 
         self.Commit('Database {0} has been loaded.'.format(self.FileName))
         self.Commit('|-The encoding is {0}.'.format(self.Encoding))
 
-        self.Commit('|-The number of literature in {0} is {1}.'.format(self.FileName, len(self.LiteratureList)))
+        self.Commit('|-The number of entries in {0} is {1}.'.format(self.FileName, len(self.EntryList)))
         TypeList = {}
-        for Literature in self.LiteratureList:
-            if Literature.Type in TypeList:
-                TypeList[Literature.Type] += 1
+        for Entry in self.EntryList:
+            if Entry.Type in TypeList:
+                TypeList[Entry.Type] += 1
             else:
-                TypeList[Literature.Type] = 1
+                TypeList[Entry.Type] = 1
 
         for Type in TypeList:
             self.Commit('  |-The number of {0}(s) is {1}'.format(Type, TypeList[Type]))
@@ -79,29 +78,28 @@ class DataBase:
             Encoding = self.Encoding
 
         # Write the title of the BibTeX file
-        BibTeXString = '% This file was created with BibTeXTools 0.10.\n'
-        BibTeXString += '% Encoding: ' + Encoding + '\n\n'
+        DataBaseString = '% This file was created with BibTeXTools 0.10.\n'
+        DataBaseString += '% Encoding: ' + Encoding + '\n\n'
 
-        MaxNameLength = 0
-        for Literature in self.LiteratureList:
-            for Name in Literature.PropertyList:
-                if len(Name) > MaxNameLength:
-                    MaxNameLength = len(Name)
+        MaxTagNameLength = 0
+        for Entry in self.EntryList:
+            for TagName in Entry.TagList:
+                if len(TagName) > MaxTagNameLength:
+                    MaxTagNameLength = len(TagName)
 
-        for Literature in self.LiteratureList:
-            LiteratureString = '@' + Literature.Type + '{' + Literature.Hash + ',\n'
-            for Name in Literature.PropertyList:
-                LiteratureString += '  ' + Name.ljust(MaxNameLength) + ' = {' + Literature.PropertyList[Name] + '},\n'
-            LiteratureString = LiteratureString.rstrip(',\n') + '\n'
-            LiteratureString += '}\n\n'
-            BibTeXString += LiteratureString
-
+        for Entry in self.EntryList:
+            EntryString = '@' + Entry.Type + '{' + Entry.CitationKey + ',\n'
+            for TagName in Entry.TagList:
+                EntryString += '  ' + TagName.ljust(MaxTagNameLength) + ' = {' + Entry.TagList[TagName] + '},\n'
+            EntryString = EntryString.rstrip(',\n') + '\n'
+            EntryString += '}\n\n'
+            DataBaseString += EntryString
 
         for Comment in self.CommentList:
-            BibTeXString += '@comment{' + Comment + '}\n\n'
+            DataBaseString += '@comment{' + Comment + '}\n\n'
 
         BibTeXFile = open(FileName, 'w', encoding = Encoding)
-        BibTeXFile.write(BibTeXString)
+        BibTeXFile.write(DataBaseString)
         BibTeXFile.close()
 
         self.Commit('The database has been saved as {0}.'.format(FileName))
@@ -111,27 +109,27 @@ class DataBase:
                          ': ' + CommitMessage)
         print(CommitMessage)
 
-    def DeleteProperty(self, PropertyNameList):
-        self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(PropertyNameList) + '"', self.FileName))
-        for Literature in self.LiteratureList:
-            for Name in PropertyNameList:
-                if Name in Literature.PropertyList:
-                    del Literature.PropertyList[Name]
-                    self.Commit('|-Delete "{0}" property from {1} {2}.'.format(Name, Literature.Type, Literature.Hash))
+    def DeleteTag(self, TagNameList):
+        self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(TagNameList) + '"', self.FileName))
+        for Entry in self.EntryList:
+            for TagName in TagNameList:
+                if TagName in Entry.TagList:
+                    del Entry.TagList[TagName]
+                    self.Commit('|-Delete "{0}" tag from {1} {2}.'.format(TagName, Entry.Type, Entry.CitationKey))
 
     def FetchURL(self):
-        self.Commit('Fetch "Url" for all literature.')
+        self.Commit('Fetch "Url" for all entries.')
         TimeOut = 1
-        for Literature in self.LiteratureList:
-            if 'Url' in Literature.PropertyList:
-                self.Commit('|-There is already "Url" property in literature {0}.'.format(Literature.Hash))
+        for Entry in self.EntryList:
+            if 'Url' in Entry.TagList:
+                self.Commit('|-There is already "Url" tag in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
             else:
-                if 'Doi' in Literature.PropertyList:
-                    URL = GetFullDoiUrl(Literature.PropertyList['Doi'])
+                if 'Doi' in Entry.TagList:
+                    URL = GetFullDoiUrl(Entry.TagList['Doi'])
                     while True:
                         try:
-                            Request = requests.get(URL, timeout=TimeOut)
-                            Literature.PropertyList['Url'] = Request.url
+                            Request = requests.get(URL, timeout = TimeOut)
+                            Entry.TagList['Url'] = Request.url
                             break
                         except:
                             TimeOut += 1
@@ -140,9 +138,9 @@ class DataBase:
                             self.Commit('|-No response from {0}, try other servers.'.format('http://dx.doi.org/'))
                             TimeOut = 1
                             break
-                    self.Commit('|-"Url" property has been added in {0} {1}.'.format(Literature.Type, Literature.Hash))
+                    self.Commit('|-"Url" tag has been added in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
                 else:
-                    self.Commit('|-There is no "Doi" property in {0} {1}. Try Title property.'.format(Literature.Type, Literature.Hash))
+                    self.Commit('|-There is no "Doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))
 
 
 def GetFullDoiUrl(Doi):

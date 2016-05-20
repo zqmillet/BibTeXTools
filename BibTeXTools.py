@@ -7,13 +7,12 @@ def PrintUsage():
     print('  BibTeXTools [options] BibTeXFileName.bib')
     print('  BibTeXTools BibTeXFileName.bib [options]')
     print('Options:')
-    print('  -v, --version         : show the version.')
-    print('  -h, --help            : show the usage.')
-    print('  -o, --output=Name     : set the output file name.')
-    print('  -d, --delete=NameList : delete the property whose name is in NameList of each')
-    print('                          literature.')
-    print('  -l, --log=LogFile     : save the log.')
-    print('  --fetchurl            : fetch the Url property of each literature;')
+    print('  -v, --version            : show the version.')
+    print('  -h, --help               : show the usage.')
+    print('  -o, --output=Name        : set the output file name.')
+    print('  -d, --delete=TagNameList : delete tags whose name is in TagNameList of each entry.')
+    print('  -l, --log=LogFileName    : save the log as LogFileName.')
+    print('  --fetchurl               : fetch the Url tag of each literature;')
 
 def PrintSyntaxError():
     print('Syntax Error!\n')
@@ -92,7 +91,7 @@ for Name, Value in Options:
         NameList = Value.split(',')
         for Index in range(0, len(NameList)):
             NameList[Index] = NameList[Index].strip()
-        BibTeXDataBase.DeleteProperty(NameList)
+        BibTeXDataBase.DeleteTag(NameList)
     elif Name.lower() in ['--fetchurl']:
         BibTeXDataBase.FetchURL()
     else:

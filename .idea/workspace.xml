@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="40507388-0cd7-4882-8b6b-2f0c50fe31df" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logo/Logo.pdf" afterPath="$PROJECT_DIR$/Logo/Logo.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logo/Logo.png" afterPath="$PROJECT_DIR$/Logo/Logo.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BibTeXParser.py" afterPath="$PROJECT_DIR$/BibTeXParser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BibTeXTools.py" afterPath="$PROJECT_DIR$/BibTeXTools.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CharList.py" afterPath="$PROJECT_DIR$/CharList.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Classes.py" afterPath="$PROJECT_DIR$/Classes.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ErrorMessage.py" afterPath="$PROJECT_DIR$/ErrorMessage.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ParserState.py" afterPath="$PROJECT_DIR$/ParserState.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Readme.md" afterPath="$PROJECT_DIR$/Readme.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/References.bib" afterPath="$PROJECT_DIR$/References.bib" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Logo/Logo.tex" afterPath="$PROJECT_DIR$/Logo/Logo.tex" />
     </list>
     <ignored path="BibTeXParser.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,8 +35,8 @@
       <file leaf-file-name="BibTeXTools.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BibTeXTools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+            <state relative-caret-position="647">
+              <caret line="89" column="39" selection-start-line="89" selection-start-column="39" selection-end-line="89" selection-end-column="39" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -52,8 +47,8 @@
       <file leaf-file-name="Classes.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Classes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="95" column="41" selection-start-line="95" selection-start-column="41" selection-end-line="95" selection-end-column="41" />
+            <state relative-caret-position="538">
+              <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
               <folding>
                 <element signature="e#0#36#0" expanded="true" />
               </folding>
@@ -407,7 +402,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="916" height="1416" extended-state="6" />
+    <frame x="-8" y="-8" width="916" height="1416" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -733,8 +728,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BibTeXTools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+        <state relative-caret-position="647">
+          <caret line="89" column="39" selection-start-line="89" selection-start-column="39" selection-end-line="89" selection-end-column="39" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -743,8 +738,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Classes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="95" column="41" selection-start-line="95" selection-start-column="41" selection-end-line="95" selection-end-column="41" />
+        <state relative-caret-position="538">
+          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
           <folding>
             <element signature="e#0#36#0" expanded="true" />
           </folding>

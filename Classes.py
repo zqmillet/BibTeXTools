@@ -56,8 +56,19 @@ class DataBase:
             return False
 
         self.Commit('Database {0} has been loaded.'.format(self.FileName))
-        self.Commit('|-The number of literature in {0} is {1}.'.format(self.FileName, len(self.LiteratureList)))
         self.Commit('|-The encoding is {0}.'.format(self.Encoding))
+
+        self.Commit('|-The number of literature in {0} is {1}.'.format(self.FileName, len(self.LiteratureList)))
+        TypeList = {}
+        for Literature in self.LiteratureList:
+            if Literature.Type in TypeList:
+                TypeList[Literature.Type] += 1
+            else:
+                TypeList[Literature.Type] = 1
+
+        for Type in TypeList:
+            self.Commit('  |-The number of {0}(s) is {1}'.format(Type, TypeList[Type]))
+
         return True
 
     def Save(self, FileName = '', Encoding = ''):
@@ -108,7 +119,7 @@ class DataBase:
                     del Literature.PropertyList[Name]
                     self.Commit('|-Delete "{0}" property from {1} {2}.'.format(Name, Literature.Type, Literature.Hash))
 
-    def GetURL(self):
+    def FetchURL(self):
         self.Commit('Fetch "Url" for all literature.')
         TimeOut = 1
         for Literature in self.LiteratureList:
@@ -116,10 +127,9 @@ class DataBase:
                 self.Commit('|-There is already "Url" property in literature {0}.'.format(Literature.Hash))
             else:
                 if 'Doi' in Literature.PropertyList:
-                    URL = 'http://dx.doi.org/' + Literature.PropertyList['Doi']
+                    URL = GetFullDoiUrl(Literature.PropertyList['Doi'])
                     while True:
                         try:
-                            # print('TimeOut = {0}, URL = {1}'.format(TimeOut, URL))
                             Request = requests.get(URL, timeout=TimeOut)
                             Literature.PropertyList['Url'] = Request.url
                             break
@@ -130,7 +140,15 @@ class DataBase:
                             self.Commit('|-No response from {0}, try other servers.'.format('http://dx.doi.org/'))
                             TimeOut = 1
                             break
-                    self.Commit('|-"Url" property has been added in literature {0}.'.format(Literature.Hash))
+                    self.Commit('|-"Url" property has been added in {0} {1}.'.format(Literature.Type, Literature.Hash))
                 else:
-                    self.Commit('|-There is no "Doi" property in literature {0}. Try Title property.'.format(Literature.Hash))
+                    self.Commit('|-There is no "Doi" property in {0} {1}. Try Title property.'.format(Literature.Type, Literature.Hash))
 
+
+def GetFullDoiUrl(Doi):
+    if Doi.lower().startswith('http://'):
+        return Doi
+    elif Doi.lower().startswith('https://'):
+        return Doi
+    else:
+        return 'http://dx.doi.org/' + Doi.strip('/')

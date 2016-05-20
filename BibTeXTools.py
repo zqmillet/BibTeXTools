@@ -13,6 +13,7 @@ def PrintUsage():
     print('  -d, --delete=NameList : delete the property whose name is in NameList of each')
     print('                          literature.')
     print('  -l, --log=LogFile     : save the log.')
+    print('  --fetchurl            : fetch the Url property of each literature;')
 
 def PrintSyntaxError():
     print('Syntax Error!\n')
@@ -37,10 +38,10 @@ Options = {}
 Arguments = []
 try:
     Options, Arguments = getopt.getopt(ParameterList,
-                                       'hvuo:d:e:l:',
+                                       'hvo:d:e:l:',
                                        ['help',
                                         'version',
-                                        'geturl',
+                                        'fetchurl',
                                         'output=',
                                         'delete=',
                                         'encoding=',
@@ -92,8 +93,8 @@ for Name, Value in Options:
         for Index in range(0, len(NameList)):
             NameList[Index] = NameList[Index].strip()
         BibTeXDataBase.DeleteProperty(NameList)
-    elif Name.lower() in ['-u', '--geturl']:
-        BibTeXDataBase.GetURL()
+    elif Name.lower() in ['--fetchurl']:
+        BibTeXDataBase.FetchURL()
     else:
         PrintSyntaxError()
         PrintUsage()

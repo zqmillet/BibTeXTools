@@ -133,7 +133,7 @@ def TagListParse(TagListString, TagList, LineIndex = 0):
                 return False
             elif Char == '=':
                 State = ParserState.WhichMode
-                TagName = TagListString[SaveCharIndex:CharIndex].strip()
+                TagName = TagListString[SaveCharIndex:CharIndex].strip().lower()
                 SaveCharIndex = CharIndex
             else:
                 pass

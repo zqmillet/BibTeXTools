@@ -106,7 +106,7 @@ if SaveLogFile:
         print()
         exit()
 
-    LogFile = open(LogFileName, 'w', encoding='utf-8')
+    LogFile = open(LogFileName, 'w', encoding = 'utf-8')
     for Commit in BibTeXDataBase.CommitList:
         LogFile.write(Commit + '\n')
     LogFile.close()

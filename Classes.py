@@ -113,23 +113,24 @@ class DataBase:
         self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(TagNameList) + '"', self.FileName))
         for Entry in self.EntryList:
             for TagName in TagNameList:
+                TagName = TagName.lower()
                 if TagName in Entry.TagList:
                     del Entry.TagList[TagName]
-                    self.Commit('|-Delete "{0}" tag from {1} {2}.'.format(TagName, Entry.Type, Entry.CitationKey))
+                    self.Commit('|-Delete "{0}" tag from {1} {2}.'.format(TagName.lower(), Entry.Type, Entry.CitationKey))
 
     def FetchURL(self):
-        self.Commit('Fetch "Url" for all entries.')
+        self.Commit('Fetch "url" tag for all entries.')
         TimeOut = 1
         for Entry in self.EntryList:
-            if 'Url' in Entry.TagList:
-                self.Commit('|-There is already "Url" tag in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+            if 'url' in Entry.TagList:
+                self.Commit('|-There is already "url" tag in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
             else:
-                if 'Doi' in Entry.TagList:
-                    URL = GetFullDoiUrl(Entry.TagList['Doi'])
+                if 'doi' in Entry.TagList:
+                    URL = GetFullDoiUrl(Entry.TagList['doi'])
                     while True:
                         try:
                             Request = requests.get(URL, timeout = TimeOut)
-                            Entry.TagList['Url'] = Request.url
+                            Entry.TagList['url'] = Request.url
                             break
                         except:
                             TimeOut += 1
@@ -138,10 +139,9 @@ class DataBase:
                             self.Commit('|-No response from {0}, try other servers.'.format('http://dx.doi.org/'))
                             TimeOut = 1
                             break
-                    self.Commit('|-"Url" tag has been added in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+                    self.Commit('|-"url" tag has been added in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
                 else:
-                    self.Commit('|-There is no "Doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))
-
+                    self.Commit('|-There is no "doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))
 
 def GetFullDoiUrl(Doi):
     if Doi.lower().startswith('http://'):

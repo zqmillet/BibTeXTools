@@ -41,6 +41,7 @@ try:
                                        ['help',
                                         'version',
                                         'fetchurl',
+                                        'rename='
                                         'output=',
                                         'delete=',
                                         'encoding=',

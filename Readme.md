@@ -14,18 +14,20 @@ A typical BibTeX file is shown as follows.
 
 ## Usage
 ### Syntax
-    BibTeXTools.py [options] BibTeXFileName.bib
-or
-
-    BibTeXTools.py BibTeXFileName.bib [options]
+    BibTeXTools.py [-h] [-d [tag [tag ...]]] [-f [tag [tag ...]]]
+                   [-o file name] [-l] [--logfile file name] [-e encoding]
+                   [-v]
+                   BibTeXFileName
 
 ### Options
-* `-v`, `--version`:<br> show the version of **BibTeXTools**;
-* `-h`, `--help`:<br> show the usage of **BibTeXTools**;
-* `-o`, `--output=FileName`:<br> set the name of output file;
-* `-d`, `--delete=TagNameList`:<br> delete the tag whose name is in `TagNameList` of each entry;
-* `-l`, `--log=LogFileName`:<br> save the log as the file `LogFileName`;
-* `-u`, `-fetchurl`:<br> fetch the Url tag of each entry;
+* `-h`, `--help`<br> show this help message and exit
+* `-d [tag [tag ...]]`, `--delete [tag [tag ...]]`<br> delete tags of all entries in the database.
+* `-f [tag [tag ...]]`, `--fetch [tag [tag ...]]`<br> fetch tags of all entries in the database.
+* `-o file name`, `--output file name`<br> set the name of the output file, if this option is not specified, the database will be overwrited.
+* `-l`, `--log`<br> save log file.
+* `--logfile file name`<br> set the name of the output file, if this option is not specified, the name of log file will be BibTeXFileName.log.
+* `-e encoding`, `--encoding encoding`<br> set the encoding of the input file, if this option is not specified, the encoding is utf-8.
+* `-v`, `--version`<br> show the version of **BibTeXTools**.
 * See todo list.
 
 ## Examples

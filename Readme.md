@@ -15,14 +15,15 @@ A typical BibTeX file is shown as follows.
 ## Usage
 ### Syntax
     BibTeXTools.py [-h] [-d [tag [tag ...]]] [-f [tag [tag ...]]]
-                   [-o file name] [-l] [--logfile file name] [-e encoding]
-                   [-v]
+                   [-r oldtagname newtagname] [-o file name] [-l]
+                   [--logfile file name] [-e encoding] [-v]
                    BibTeXFileName
 
 ### Options
 * `-h`, `--help`<br> show this help message and exit
 * `-d [tag [tag ...]]`, `--delete [tag [tag ...]]`<br> delete tags of all entries in the database.
 * `-f [tag [tag ...]]`, `--fetch [tag [tag ...]]`<br> fetch tags of all entries in the database.
+* `-r oldtagname newtagname`, `--rename oldtagname newtagname`<br> rename tags of all entries from oldtagname to newtagname.
 * `-o file name`, `--output file name`<br> set the name of the output file, if this option is not specified, the database will be overwrited.
 * `-l`, `--log`<br> save log file.
 * `--logfile file name`<br> set the name of the output file, if this option is not specified, the name of log file will be BibTeXFileName.log.
@@ -33,60 +34,28 @@ A typical BibTeX file is shown as follows.
 ## Examples
 Delete the `ISSN` tag of each entry in the `References.bib`.
 
-    BibTeXTools.py -d ISSN References.bib
+    BibTeXTools.py References.bib -d ISSN
 
 Delete the `ISSN` tag of each entry, and save the database as file `NoISSN.bib`. The file `References.bib` remains unchanged.
 
-    BibTeXTools.py -d ISSN -o NoISSN.bib References.bib
+    BibTeXTools.py References.bib -d ISSN -o NoISSN.bib
 
 Delete the `ISSN`, `Year`, and `Owner` tags of each entry in the `References.bib`.
 
-    BibTeXTools.py -d "ISSN, Year, Owner" References.bib
+    BibTeXTools.py References.bib -d ISSN Year Owner
 
 Delete the `ISSN`, `Year`, and `Owner` tags of each entry in the `References.bib`, and save the log as the file `References.log`.
 
-    BibTeXTools.py -d "ISSN, Year, Owner" -l References.log References.bib
+    BibTeXTools.py References.bib -d ISSN Year Owner -l
 
-Fetch `Url` tag of each entry in the `References.bib`.
+Delete the `Url` tag then fetch `Url` tag of each entry in the `References.bib`.
 
-    BibTeXTools.py -d Url -u -l References.log References.bib
+    BibTeXTools.py References.bib -d Url -f Url -l
 
-Then the log is shown as follows.
+Rename the `Url` tag to `Link` tag of each entry in the `References.bib`.
 
-    2016-05-20 16:45:55: Database References.bib has been loaded.
-    2016-05-20 16:45:55: |-The encoding is utf-8.
-    2016-05-20 16:45:55: |-The number of entries in References.bib is 13.
-    2016-05-20 16:45:55:   |-The number of TechReport(s) is 1
-    2016-05-20 16:45:55:   |-The number of Article(s) is 7
-    2016-05-20 16:45:55:   |-The number of InProceedings(s) is 5
-    2016-05-20 16:45:55: Delete "Url" properties from References.bib.
-    2016-05-20 16:45:55: |-Delete "Url" tag from InProceedings Chen-2010-p393-400.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Dove-2009-p7-10.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Hu-2016-p449-475.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Luthar-2000-p543-562.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Qi-2011-p770-781.
-    2016-05-20 16:45:55: |-Delete "Url" tag from InProceedings Rieger-2009-p632-636.
-    2016-05-20 16:45:55: |-Delete "Url" tag from InProceedings Rieger-2012-p143-148.
-    2016-05-20 16:45:55: |-Delete "Url" tag from InProceedings Sousa-2007-p373-380.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Sridhar-2012-p210-224.
-    2016-05-20 16:45:55: |-Delete "Url" tag from InProceedings Wei-2010-p15-22.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Yu-2016-p1058-1070.
-    2016-05-20 16:45:55: |-Delete "Url" tag from Article Zhou-2012-p1439-1453.
-    2016-05-20 16:45:55: Fetch "Url" for all entries.
-    2016-05-20 16:45:55: |-There is no "Doi" tag in TechReport Alliance-2013-p-. Try Title tag.
-    2016-05-20 16:46:05: |-"Url" tag has been added in InProceedings Chen-2010-p393-400.
-    2016-05-20 16:46:13: |-"Url" tag has been added in Article Dove-2009-p7-10.
-    2016-05-20 16:46:20: |-"Url" tag has been added in Article Hu-2016-p449-475.
-    2016-05-20 16:46:28: |-"Url" tag has been added in Article Luthar-2000-p543-562.
-    2016-05-20 16:46:36: |-"Url" tag has been added in Article Qi-2011-p770-781.
-    2016-05-20 16:46:43: |-"Url" tag has been added in InProceedings Rieger-2009-p632-636.
-    2016-05-20 16:46:50: |-"Url" tag has been added in InProceedings Rieger-2012-p143-148.
-    2016-05-20 16:46:58: |-"Url" tag has been added in InProceedings Sousa-2007-p373-380.
-    2016-05-20 16:47:05: |-"Url" tag has been added in Article Sridhar-2012-p210-224.
-    2016-05-20 16:47:13: |-"Url" tag has been added in InProceedings Wei-2010-p15-22.
-    2016-05-20 16:47:20: |-"Url" tag has been added in Article Yu-2016-p1058-1070.
-    2016-05-20 16:47:30: |-"Url" tag has been added in Article Zhou-2012-p1439-1453.
-    2016-05-20 16:47:30: The database has been saved as References.bib.
+    BibTeXTools.py References.bib -r Url Link -l
+
 
 ## Built with
 * Python 3.5

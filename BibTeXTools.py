@@ -20,7 +20,7 @@ Parser.add_argument('-r', '--rename',
                     nargs   = 2,
                     metavar = ('oldtagname', 'newtagname'),
                     action  = Classes.ByOrder,
-                    help='fetch tags of all entries in the database.')
+                    help    = 'rename tags of all entries from oldtagname to newtagname.')
 Parser.add_argument('-o', '--output',
                     nargs   = 1,
                     metavar = 'file name',

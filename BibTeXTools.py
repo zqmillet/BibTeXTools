@@ -16,6 +16,11 @@ Parser.add_argument('-f', '--fetch',
                     metavar = 'tag',
                     action  = Classes.ByOrder,
                     help    = 'fetch tags of all entries in the database.')
+Parser.add_argument('-r', '--rename',
+                    nargs   = 2,
+                    metavar = ('oldtagname', 'newtagname'),
+                    action  = Classes.ByOrder,
+                    help='fetch tags of all entries in the database.')
 Parser.add_argument('-o', '--output',
                     nargs   = 1,
                     metavar = 'file name',
@@ -77,6 +82,8 @@ for Argument in OrderedArgumentList:
     elif Argument[0] == 'fetch':
         TagNameList = Argument[1]
         BibTeXDataBase.FetchTags(TagNameList)
+    elif Argument[0] == 'rename':
+        BibTeXDataBase.RenameTag(Argument[1][0], Argument[1][1])
 
 BibTeXDataBase.Save(OutputFileName)
 

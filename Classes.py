@@ -4,7 +4,7 @@ import time
 import requests
 import argparse
 import Functions
-
+import CharList
 
 class Entry:
     Type = ''
@@ -128,12 +128,30 @@ class DataBase:
         if len(TagNameList) == 0:
             return
 
-        self.Commit('Fetch {0} tag from {1}.'.format('"' + '", "'.join(TagNameList) + '"', self.FileName))
+        self.Commit('Fetch {0} tag.'.format('"' + '", "'.join(TagNameList) + '"'))
         for TagName in TagNameList:
             if TagName.lower() == 'url':
                 self.FetchUrl()
             else:
                 self.Commit('Sorry, fetching "{0}" tag does not support temporarily.'.format(TagName))
+
+    def RenameTag(self, OldTagName, NewTagName):
+        self.Commit('Remane "{0}" tag to "{1}" tag.'.format(OldTagName, NewTagName))
+        for Char in OldTagName:
+            if Char in CharList.IllegalCharOfTagName:
+                self.Commit('|-There is illegal char "{0}" in tag name "{1}".'.format(Char, OldTagName))
+                exit(1)
+        for Char in NewTagName:
+            if Char in CharList.IllegalCharOfTagName:
+                self.Commit('|-There is illegal char "{0}" in tag name "{1}".'.format(Char, NewTagName))
+                exit(1)
+
+        for Entry in self.EntryList:
+            if OldTagName.lower() in Entry.TagList:
+                Entry.TagList[NewTagName.lower()] = Entry.TagList[OldTagName.lower()]
+                del Entry.TagList[OldTagName.lower()]
+                self.Commit('|-The "{0}" tag has been renamed to "{1}" in {2} {3}.'.format(OldTagName.lower(), NewTagName.lower(), Entry.Type, Entry.CitationKey))
+
 
     def FetchUrl(self):
         TimeOut = 1
@@ -155,7 +173,7 @@ class DataBase:
                             self.Commit('|-No response from {0}, try other servers.'.format('http://dx.doi.org/'))
                             TimeOut = 1
                             break
-                    self.Commit('|-"url" tag has been added in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+                    self.Commit('|-The "url" tag has been added in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
                 else:
                     self.Commit(
                         '|-There is no "doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))

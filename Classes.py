@@ -2,6 +2,9 @@ from BibTeXParser import BibTeXParse
 import os
 import time
 import requests
+import argparse
+import Functions
+
 
 class Entry:
     Type = ''
@@ -109,8 +112,11 @@ class DataBase:
                          ': ' + CommitMessage)
         print(CommitMessage)
 
-    def DeleteTag(self, TagNameList):
-        self.Commit('Delete {0} properties from {1}.'.format('"' + '", "'.join(TagNameList) + '"', self.FileName))
+    def DeleteTags(self, TagNameList):
+        if len(TagNameList) == 0:
+            return
+
+        self.Commit('Delete {0} tag from {1}.'.format('"' + '", "'.join(TagNameList) + '"', self.FileName))
         for Entry in self.EntryList:
             for TagName in TagNameList:
                 TagName = TagName.lower()
@@ -118,18 +124,28 @@ class DataBase:
                     del Entry.TagList[TagName]
                     self.Commit('|-Delete "{0}" tag from {1} {2}.'.format(TagName.lower(), Entry.Type, Entry.CitationKey))
 
-    def FetchURL(self):
-        self.Commit('Fetch "url" tag for all entries.')
+    def FetchTags(self, TagNameList):
+        if len(TagNameList) == 0:
+            return
+
+        self.Commit('Fetch {0} tag from {1}.'.format('"' + '", "'.join(TagNameList) + '"', self.FileName))
+        for TagName in TagNameList:
+            if TagName.lower() == 'url':
+                self.FetchUrl()
+            else:
+                self.Commit('Sorry, fetching "{0}" tag does not support temporarily.'.format(TagName))
+
+    def FetchUrl(self):
         TimeOut = 1
         for Entry in self.EntryList:
             if 'url' in Entry.TagList:
                 self.Commit('|-There is already "url" tag in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
             else:
                 if 'doi' in Entry.TagList:
-                    URL = GetFullDoiUrl(Entry.TagList['doi'])
+                    URL = Functions.GetFullDoiUrl(Entry.TagList['doi'])
                     while True:
                         try:
-                            Request = requests.get(URL, timeout = TimeOut)
+                            Request = requests.get(URL, timeout=TimeOut)
                             Entry.TagList['url'] = Request.url
                             break
                         except:
@@ -141,12 +157,14 @@ class DataBase:
                             break
                     self.Commit('|-"url" tag has been added in {0} {1}.'.format(Entry.Type, Entry.CitationKey))
                 else:
-                    self.Commit('|-There is no "doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))
+                    self.Commit(
+                        '|-There is no "doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))
 
-def GetFullDoiUrl(Doi):
-    if Doi.lower().startswith('http://'):
-        return Doi
-    elif Doi.lower().startswith('https://'):
-        return Doi
-    else:
-        return 'http://dx.doi.org/' + Doi.strip('/')
+
+class ByOrder(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not 'OrderedArgumentList' in namespace:
+            setattr(namespace, 'OrderedArgumentList', [])
+        previous = namespace.OrderedArgumentList
+        previous.append((self.dest, values))
+        setattr(namespace, 'OrderedArgumentList', previous)

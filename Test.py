@@ -1,13 +1,6 @@
 import argparse
-import sys
-
-class ByOrder(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        if not 'OrderedArgumentList' in namespace:
-            setattr(namespace, 'OrderedArgumentList', [])
-        previous = namespace.OrderedArgumentList
-        previous.append((self.dest, values))
-        setattr(namespace, 'OrderedArgumentList', previous)
+import Classes
+import os
 
 Parser = argparse.ArgumentParser()
 Parser.add_argument('BibTeXFileName',
@@ -15,12 +8,12 @@ Parser.add_argument('BibTeXFileName',
 Parser.add_argument('-d', '--delete',
                     nargs   = '*',
                     metavar = 'tag',
-                    action  = ByOrder,
+                    action  = Classes.ByOrder,
                     help    = 'delete tags of all entries in the database.')
 Parser.add_argument('-f', '--fetch',
                     nargs   = '*',
                     metavar = 'tag',
-                    action  = ByOrder,
+                    action  = Classes.ByOrder,
                     help    = 'fetch tags of all entries in the database.')
 Parser.add_argument('-o', '--output',
                     nargs   = 1,
@@ -33,52 +26,67 @@ Parser.add_argument('--logfile',
                     nargs   = 1,
                     metavar = 'file name',
                     help    = 'set the name of the output file, if this option is not specified, the name of log file will be BibTeXFileName.log.')
+Parser.add_argument('-e', '--encoding',
+                    nargs   = 1,
+                    metavar = 'encoding',
+                    help    = 'set the encoding of the input file, if this option is not specified, the encoding is utf-8.')
 Parser.add_argument('-v', '--version',
                     action  = 'version',
                     version = 'BibTeXTools 0.10.',
                     help    = 'show the version of BibTeXTools.')
 
-Parameters = 'BibTeXFileName.bib -f url --delete Title title'.split()
+Parameters = 'References.bib --delete Title Url -f url -o Qiqi.bib'.split()
 
+Arguments = None
 try:
-    Parser.parse_args(['-h'])
+    Arguments = Parser.parse_args(Parameters)
 except:
     exit(1)
-
-Arguments = Parser.parse_args(Parameters)
 OrderedArgumentList = Arguments.OrderedArgumentList
+
+Encoding = 'utf-8'
+# Handle parameter '-e', '--encoding'.
+if Arguments.encoding is not None:
+    Encoding = Arguments.encoding
+
+# Handle parameter 'BibTeXFileName'.
+BibTeXFileName = Arguments.BibTeXFileName
+if not os.path.isfile(BibTeXFileName):
+    print('The file "{0}" does not exist.'.format(BibTeXFileName))
+    exit(1)
+
+BibTeXDataBase = Classes.DataBase()
+if not BibTeXDataBase.Load(BibTeXFileName, Encoding):
+    exit(1)
+
+OutputFileName = BibTeXFileName
+LogFileName = BibTeXFileName + '.log'
+
+# Handle parameter '-o', '--output'.
+if Arguments.output is not None:
+    OutputFileName = Arguments.output[0]
+
+# Handle parameter '--logfile'.
+if Arguments.logfile is not None:
+    LogFileName = Arguments.logfile
+
+# Handle the ordered arguments.
+for Argument in OrderedArgumentList:
+    if Argument[0] == 'delete':
+        TagNameList = Argument[1]
+        BibTeXDataBase.DeleteTags(TagNameList)
+    elif Argument[0] == 'fetch':
+        TagNameList = Argument[1]
+        BibTeXDataBase.FetchTags(TagNameList)
+
+BibTeXDataBase.Save(OutputFileName)
+
+# Handle parameter '-l', '--log'.
 SaveLogFile = Arguments.log
+if SaveLogFile:
+    LogFile = open(LogFileName, 'w', encoding='utf-8')
+    for Commit in BibTeXDataBase.CommitList:
+        LogFile.write(Commit + '\n')
+    LogFile.close()
 
-print(OrderedArgumentList)
-
-for Name in OrderedArgumentList:
-    print(Name[1])
-
-# ArgumentList = Arguments.positionals
-# pass
-#     .__dict__
-# BibTeXFileName = Arguments.BibTeXFileName
-# OutputFileName = BibTeXFileName
-# SaveLogFile = False
-# LogFileName = ''
-#
-# for Name in ArgumentList:
-#     if Name in ['d', 'delete']:
-#         print('delete')
-#         print(ArgumentList[Name])
-#     elif Name in ['f', 'fetch']:
-#         print('fetch')
-#         print(ArgumentList[Name])
-#     elif Name in ['o', 'output']:
-#         print('output')
-#         OutputFileName = ArgumentList[Name]
-#         print(ArgumentList[Name])
-#     elif Name in ['l', 'logfile']:
-#         SaveLogFile = True
-#         if ArgumentList[Name] is not None:
-#             LogFileName = ArgumentList[Name]
-#         else:
-#             LogFileName = BibTeXFileName + '.log'
-#         print('logfile')
-#         print(LogFileName)
 # ref: http://python.usyiyi.cn/python_278/library/argparse.html

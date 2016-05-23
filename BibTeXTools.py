@@ -1,113 +1,89 @@
-import sys
-import getopt
+import argparse
 import Classes
+import os
+import sys
 
-def PrintUsage():
-    print('Usage:')
-    print('  BibTeXTools [options] BibTeXFileName.bib')
-    print('  BibTeXTools BibTeXFileName.bib [options]')
-    print('Options:')
-    print('  -v, --version            : show the version.')
-    print('  -h, --help               : show the usage.')
-    print('  -o, --output=Name        : set the output file name.')
-    print('  -d, --delete=TagNameList : delete tags whose name is in TagNameList of each entry.')
-    print('  -l, --log=LogFileName    : save the log as LogFileName.')
-    print('  --fetchurl               : fetch the Url tag of each literature;')
+Parser = argparse.ArgumentParser()
+Parser.add_argument('BibTeXFileName',
+                    help='the file name of BibTeX database.')
+Parser.add_argument('-d', '--delete',
+                    nargs   = '*',
+                    metavar = 'tag',
+                    action  = Classes.ByOrder,
+                    help    = 'delete tags of all entries in the database.')
+Parser.add_argument('-f', '--fetch',
+                    nargs   = '*',
+                    metavar = 'tag',
+                    action  = Classes.ByOrder,
+                    help    = 'fetch tags of all entries in the database.')
+Parser.add_argument('-o', '--output',
+                    nargs   = 1,
+                    metavar = 'file name',
+                    help    = 'set the name of the output file, if this option is not specified, the database will be overwrited.')
+Parser.add_argument('-l', '--log',
+                    action  = 'store_true',
+                    help    = 'save log file.')
+Parser.add_argument('--logfile',
+                    nargs   = 1,
+                    metavar = 'file name',
+                    help    = 'set the name of the output file, if this option is not specified, the name of log file will be BibTeXFileName.log.')
+Parser.add_argument('-e', '--encoding',
+                    nargs   = 1,
+                    metavar = 'encoding',
+                    help    = 'set the encoding of the input file, if this option is not specified, the encoding is utf-8.')
+Parser.add_argument('-v', '--version',
+                    action  = 'version',
+                    version = 'BibTeXTools 0.10.',
+                    help    = 'show the version of BibTeXTools.')
 
-def PrintSyntaxError():
-    print('Syntax Error!\n')
-
-def PrintVersion():
-    print('This is BibTeXTools v0.10.')
-
-# Order the arguments
-ParameterList = sys.argv[1:]
-if len(ParameterList) == 0:
-    PrintVersion()
-    PrintUsage()
-    exit()
-elif ParameterList[0][0] != '-':
-    ParameterList.append(ParameterList[0])
-    del ParameterList[0]
-else:
-    pass
-
-# Analyze the arguments
-Options = {}
-Arguments = []
+Arguments = None
 try:
-    Options, Arguments = getopt.getopt(ParameterList,
-                                       'hvo:d:e:l:',
-                                       ['help',
-                                        'version',
-                                        'fetchurl',
-                                        'rename='
-                                        'output=',
-                                        'delete=',
-                                        'encoding=',
-                                        'log='])
-except getopt.GetoptError:
-    PrintSyntaxError()
-    PrintUsage()
-    exit()
+    Arguments = Parser.parse_args(sys.argv[1:])
+except:
+    exit(1)
+OrderedArgumentList = Arguments.OrderedArgumentList
 
-# Obtain the BibTeXFileName
-if len(Arguments) != 1:
-    BibTeXFileName = ''
-else:
-    BibTeXFileName = Arguments[0]
+Encoding = 'utf-8'
+# Handle parameter '-e', '--encoding'.
+if Arguments.encoding is not None:
+    Encoding = Arguments.encoding
+
+# Handle parameter 'BibTeXFileName'.
+BibTeXFileName = Arguments.BibTeXFileName
+if not os.path.isfile(BibTeXFileName):
+    print('The file "{0}" does not exist.'.format(BibTeXFileName))
+    exit(1)
+
+BibTeXDataBase = Classes.DataBase()
+if not BibTeXDataBase.Load(BibTeXFileName, Encoding):
+    exit(1)
 
 OutputFileName = BibTeXFileName
-BibTeXDataBase = Classes.DataBase()
-Encoding = ''
-SaveLogFile = False
-LogFileName = ''
+LogFileName = BibTeXFileName + '.log'
 
-# Do something according to the arguments
-DoneList = []
-for Name, Value in Options:
-    DoneList.append(Name)
-    if Name.lower() in ['-h', '--help']:
-        PrintUsage()
-    elif Name.lower() in ['-v', '--version']:
-        PrintVersion()
-    elif Name.lower() in ['-o', '--output']:
-        OutputFileName = Value
-    elif Name.lower() in ['-e', '--encoding']:
-        Encoding = Value
-    elif Name.lower() in ['-l', '--log']:
-        SaveLogFile = True
-        LogFileName = Value
-    else:
-        DoneList.remove(Name)
+# Handle parameter '-o', '--output'.
+if Arguments.output is not None:
+    OutputFileName = Arguments.output[0]
 
-if not BibTeXDataBase.Load(BibTeXFileName):
-    exit()
+# Handle parameter '--logfile'.
+if Arguments.logfile is not None:
+    LogFileName = Arguments.logfile
 
-for Name, Value in Options:
-    if Name in DoneList:
-        continue
-
-    if Name.lower() in ['-d', '--delete']:
-        NameList = Value.split(',')
-        for Index in range(0, len(NameList)):
-            NameList[Index] = NameList[Index].strip()
-        BibTeXDataBase.DeleteTag(NameList)
-    elif Name.lower() in ['--fetchurl']:
-        BibTeXDataBase.FetchURL()
-    else:
-        PrintSyntaxError()
-        PrintUsage()
-        exit()
+# Handle the ordered arguments.
+for Argument in OrderedArgumentList:
+    if Argument[0] == 'delete':
+        TagNameList = Argument[1]
+        BibTeXDataBase.DeleteTags(TagNameList)
+    elif Argument[0] == 'fetch':
+        TagNameList = Argument[1]
+        BibTeXDataBase.FetchTags(TagNameList)
 
 BibTeXDataBase.Save(OutputFileName)
 
+# Handle parameter '-l', '--log'.
+SaveLogFile = Arguments.log
 if SaveLogFile:
-    if LogFileName == '':
-        print()
-        exit()
-
-    LogFile = open(LogFileName, 'w', encoding = 'utf-8')
+    LogFile = open(LogFileName, 'w', encoding='utf-8')
     for Commit in BibTeXDataBase.CommitList:
         LogFile.write(Commit + '\n')
     LogFile.close()

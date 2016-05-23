@@ -152,6 +152,27 @@ class DataBase:
                 del Entry.TagList[OldTagName.lower()]
                 self.Commit('|-The "{0}" tag has been renamed to "{1}" in {2} {3}.'.format(OldTagName.lower(), NewTagName.lower(), Entry.Type, Entry.CitationKey))
 
+    def CopyTag(self, TagName1, TagName2):
+        self.Commit('Copy "{0}" tag to "{1}" tag.'.format(TagName1, TagName2))
+        for Char in TagName1:
+            if Char in CharList.IllegalCharOfTagName:
+                self.Commit('|-There is illegal char "{0}" in tag name "{1}".'.format(Char, TagName1))
+                exit(1)
+        for Char in TagName2:
+            if Char in CharList.IllegalCharOfTagName:
+                self.Commit('|-There is illegal char "{0}" in tag name "{1}".'.format(Char, TagName2))
+                exit(1)
+
+        for Entry in self.EntryList:
+            if TagName1.lower() in Entry.TagList:
+                Entry.TagList[TagName2.lower()] = Entry.TagList[TagName1.lower()]
+                self.Commit('|-The "{0}" tag has been copied to {1} in {2} {3}.'.format(TagName1, TagName2, Entry.Type, Entry.CitationKey))
+            else:
+                Entry.TagList[TagName2.lower()] = ''
+                self.Commit('|-There is no "{0}" tag in {2} {3}, the content of "{1}" tag is empty.'.format(TagName1, TagName2, Entry.Type, Entry.CitationKey))
+
+    def ClearEmptyType(self, TagNameList):
+        pass
 
     def FetchUrl(self):
         TimeOut = 1

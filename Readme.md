@@ -55,9 +55,17 @@ Delete the `Url` tag then fetch `Url` tag of each entry in the `References.bib`.
 
     BibTeXTools.py References.bib -d Url -f Url -l
 
-Rename the `Url` tag to `Link` tag of each entry in the `References.bib`.
+Copy the `Url` tag to the `Link` tag of each entry in the `References.bib`, if there is no `Url` tag, the `Link` tag will be created and empty.
 
-    BibTeXTools.py References.bib -r Url Link -l
+    BibTeXTools.py References.bib -c Url Link -l
+
+Rename the `Url` tag to the `Link` tag of each entry in the `References.bib`, if there is no `Url` tag, the corresponding `Link` tag will not be created.
+
+    BibTeXTools.py References.bib --rename Url Link -l
+
+Copy the `Url` tag to the `Link` tag of each entry in the `References.bib`, and clear the empty `Link` tags in the `References.bib`.
+
+    BibTeXTools.py References.bib -c Url Link --clearempty Link -l
 
 
 ## Built with

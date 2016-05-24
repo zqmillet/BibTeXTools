@@ -16,6 +16,11 @@ Parser.add_argument('-f', '--fetch',
                     metavar = 'tag',
                     action  = Classes.ByOrder,
                     help    = 'fetch tags of all entries in the database.')
+Parser.add_argument('--clearempty',
+                    nargs   = '*',
+                    metavar = 'tag',
+                    action  = Classes.ByOrder,
+                    help    = 'clear the empty tags of all entries, if tag name list is empty, all empty tags in database will be deleted.')
 Parser.add_argument('-r', '--rename',
                     nargs   = 2,
                     metavar = ('oldtagname', 'newtagname'),
@@ -26,11 +31,6 @@ Parser.add_argument('-c', '--copy',
                     metavar = ('tagname1', 'tagname2'),
                     action  = Classes.ByOrder,
                     help    = "copy the tagname1's content content tagname2.")
-Parser.add_argument('--clearemptytag',
-                    nargs   = '*',
-                    metavar = 'tag',
-                    action  = Classes.ByOrder,
-                    help    = 'clear the empty tags of all entries, if tag name list is empty, all empty tags in database will be deleted.')
 Parser.add_argument('-o', '--output',
                     nargs   = 1,
                     metavar = 'file name',
@@ -96,7 +96,7 @@ for Argument in OrderedArgumentList:
         BibTeXDataBase.RenameTag(Argument[1][0], Argument[1][1])
     elif Argument[0] == 'copy':
         BibTeXDataBase.CopyTag(Argument[1][0], Argument[1][1])
-    elif Argument[0] == 'clearemptytag':
+    elif Argument[0] == 'clearempty':
         TagNameList = Argument[1]
         BibTeXDataBase.ClearEmptyTags(TagNameList)
 

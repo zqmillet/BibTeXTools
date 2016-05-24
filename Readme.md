@@ -15,21 +15,24 @@ A typical BibTeX file is shown as follows.
 ## Usage
 ### Syntax
     BibTeXTools.py [-h] [-d [tag [tag ...]]] [-f [tag [tag ...]]]
-                   [-r oldtagname newtagname] [-o file name] [-l]
-                   [--logfile file name] [-e encoding] [-v]
+                   [--clearempty [tag [tag ...]]]
+                   [-r oldtagname newtagname] [-c tagname1 tagname2]
+                   [-o file name] [-l] [--logfile file name] [-e encoding]
+                   [-v]
                    BibTeXFileName
 
 ### Options
 * `-h`, `--help`<br> show this help message and exit
 * `-d [tag [tag ...]]`, `--delete [tag [tag ...]]`<br> delete tags of all entries in the database.
 * `-f [tag [tag ...]]`, `--fetch [tag [tag ...]]`<br> fetch tags of all entries in the database.
+* `--clearempty [tag [tag ...]]`<br> clear the empty tags of all entries, if tag name list is empty, all empty tags in database will be deleted.
 * `-r oldtagname newtagname`, `--rename oldtagname newtagname`<br> rename tags of all entries from oldtagname to newtagname.
+* `-c tagname1 tagname2`, `--copy tagname1 tagname2`<br> copy the tagname1's content content tagname2.
 * `-o file name`, `--output file name`<br> set the name of the output file, if this option is not specified, the database will be overwrited.
 * `-l`, `--log`<br> save log file.
 * `--logfile file name`<br> set the name of the output file, if this option is not specified, the name of log file will be BibTeXFileName.log.
 * `-e encoding`, `--encoding encoding`<br> set the encoding of the input file, if this option is not specified, the encoding is utf-8.
 * `-v`, `--version`<br> show the version of **BibTeXTools**.
-* See todo list.
 
 ## Examples
 Delete the `ISSN` tag of each entry in the `References.bib`.

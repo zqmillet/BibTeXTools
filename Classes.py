@@ -1,7 +1,6 @@
 from BibTeXParser import BibTeXParse
 import os
 import time
-import copy
 import requests
 import argparse
 import Functions

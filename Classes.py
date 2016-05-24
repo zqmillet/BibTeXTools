@@ -5,6 +5,8 @@ import requests
 import argparse
 import Functions
 import CharList
+import HTMLParsers
+
 
 class Entry:
     Type = ''
@@ -213,6 +215,28 @@ class DataBase:
                 else:
                     self.Commit(
                         '|-There is no "doi" tag in {0} {1}. Try Title tag.'.format(Entry.Type, Entry.CitationKey))
+
+    def DownloadFullPaper(self, Directory):
+        self.Commit('Download full papers of all entries.')
+        for Entry in self.EntryList:
+            self.Commit('|-Download the full paper of {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+            if 'url' in Entry.TagList:
+                Url = Entry.TagList['url']
+                if 'ieeexplore.ieee.org' in Url.lower():
+                    HTMLParser = HTMLParsers.IEEEXplore()
+                    if HTMLParser.Parse(Url):
+                        self.Commit('  |-The remote address of {0} {1} is {2}.'.format(Entry.Type, Entry.CitationKey, HTMLParser.FullPaperPath))
+                        self.Commit('  |-Downloading the full paper of {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+                        Data = requests.get(HTMLParser.FullPaperPath)
+                        with open(Entry.CitationKey + '.pdf', "wb") as FullPaper:
+                            FullPaper.write(Data.content)
+                        self.Commit('  |-The full paper of {0} {1} has been downloaded and saved as {2}.'.format(Entry.Type, Entry.CitationKey, Entry.CitationKey + '.pdf'))
+                    else:
+                        self.Commit('  |-Could not get the remote address of {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+                else:
+                    self.Commit('  |-Sorry, this url is not supported temporarily.')
+            else:
+                self.Commit('  |-There is no "url" tag in {0} {1}, the full paper can not be downloaded.'.format(Entry.Type, Entry.CitationKey))
 
 
 class ByOrder(argparse.Action):

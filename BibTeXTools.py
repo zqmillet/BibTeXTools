@@ -31,6 +31,14 @@ Parser.add_argument('-c', '--copy',
                     metavar = ('tagname1', 'tagname2'),
                     action  = Classes.ByOrder,
                     help    = "copy the tagname1's content content tagname2.")
+Parser.add_argument('--downloadfullpapers',
+                    nargs   = 0,
+                    action  = Classes.ByOrder,
+                    help    = "download the full papers of each entry.")
+Parser.add_argument('--fullpaper',
+                    nargs   = 1,
+                    metavar = 'directory',
+                    help    = 'set the directory of downloaded full papers, if this option is not specified, the directory is current directory.')
 Parser.add_argument('-o', '--output',
                     nargs   = 1,
                     metavar = 'file name',
@@ -84,6 +92,11 @@ if Arguments.output is not None:
 if Arguments.logfile is not None:
     LogFileName = Arguments.logfile
 
+# Handle parameter '--fullpaper'.
+FullPaperDirectory = '.\\'
+if Arguments.fullpaper is not None:
+    FullPaperDirectory = Arguments.fullpaper
+
 # Handle the ordered arguments.
 for Argument in OrderedArgumentList:
     if Argument[0] == 'delete':
@@ -99,6 +112,8 @@ for Argument in OrderedArgumentList:
     elif Argument[0] == 'clearempty':
         TagNameList = Argument[1]
         BibTeXDataBase.ClearEmptyTags(TagNameList)
+    elif Argument[0] == 'downloadfullpapers':
+        BibTeXDataBase.DownloadFullPaper(FullPaperDirectory)
 
 BibTeXDataBase.Save(OutputFileName)
 

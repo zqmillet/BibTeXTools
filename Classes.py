@@ -1,6 +1,7 @@
 from BibTeXParser import BibTeXParse
 import os
 import time
+import copy
 import requests
 import argparse
 import Functions
@@ -171,8 +172,23 @@ class DataBase:
                 Entry.TagList[TagName2.lower()] = ''
                 self.Commit('|-There is no "{0}" tag in {2} {3}, the content of "{1}" tag is empty.'.format(TagName1, TagName2, Entry.Type, Entry.CitationKey))
 
-    def ClearEmptyType(self, TagNameList):
-        pass
+    def ClearEmptyTags(self, TagNameList):
+        if len(TagNameList) > 0:
+            self.Commit('Clear emtpy tags {0}.'.format('"' + '", "'.join(TagNameList) + '"'))
+            for Entry in self.EntryList:
+                for TagName in TagNameList:
+                    if TagName.lower() in Entry.TagList:
+                        if Entry.TagList[TagName.lower()].strip() == '':
+                            del Entry.TagList[TagName.lower()]
+                            self.Commit('|-The empty "{0}" tag has been deleted in {1} {2}.'.format(TagName, Entry.Type, Entry.CitationKey))
+        else:
+            self.Commit('Clear all emtpy tags.')
+            for Entry in self.EntryList:
+                TagNameList = list(Entry.TagList.keys())[:]
+                for TagName in TagNameList:
+                    if Entry.TagList[TagName].strip() == '':
+                        del Entry.TagList[TagName]
+                        self.Commit('|-The empty "{0}" tag has been deleted in {1} {2}.'.format(TagName, Entry.Type, Entry.CitationKey))
 
     def FetchUrl(self):
         TimeOut = 1

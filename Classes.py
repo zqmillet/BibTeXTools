@@ -3,6 +3,7 @@ import os
 import time
 import requests
 import argparse
+import shutil
 import Functions
 import CharList
 import HTMLParsers
@@ -103,11 +104,12 @@ class DataBase:
         for Comment in self.CommentList:
             DataBaseString += '@comment{' + Comment + '}\n\n'
 
-        BibTeXFile = open(FileName, 'w', encoding = Encoding)
+        BibTeXFile = open(FileName, 'w', encoding=Encoding)
         BibTeXFile.write(DataBaseString)
         BibTeXFile.close()
 
         self.Commit('The database has been saved as {0}.'.format(FileName))
+
 
     def Commit(self, CommitMessage):
         self.CommitList.append(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())) +
@@ -237,6 +239,20 @@ class DataBase:
                     self.Commit('  |-Sorry, this url is not supported temporarily.')
             else:
                 self.Commit('  |-There is no "url" tag in {0} {1}, the full paper can not be downloaded.'.format(Entry.Type, Entry.CitationKey))
+
+    def Backup(self, FileName):
+        if not os.path.isfile(FileName):
+            self.Commit('The BibTeX file "{0}" does not exist.'.format(FileName))
+
+        shutil.copy(FileName, FileName + '.bkp')
+        self.Commit('The BibTeX file "{0}" has been backed up.'.format(FileName))
+
+    def Recover(self, FileName):
+        if not os.path.isfile(FileName + '.bkp'):
+            self.Commit('The backup file "{0}" does not exist.'.format(FileName + '.bkp'))
+
+        shutil.copy(FileName + '.bkp', FileName)
+        self.Commit('The BibTeX file "{0}" has been recovered.'.format(FileName))
 
 
 class ByOrder(argparse.Action):

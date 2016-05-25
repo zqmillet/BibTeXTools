@@ -46,6 +46,9 @@ Parser.add_argument('-o', '--output',
 Parser.add_argument('-l', '--log',
                     action  = 'store_true',
                     help    = 'save log file.')
+Parser.add_argument('--recover',
+                    action  = 'store_true',
+                    help    = 'recover the BibTeX file from recent edition, if his option is specified, the other options will be ignored.')
 Parser.add_argument('--logfile',
                     nargs   = 1,
                     metavar = 'file name',
@@ -64,7 +67,13 @@ try:
     Arguments = Parser.parse_args(sys.argv[1:])
 except:
     exit(1)
-OrderedArgumentList = Arguments.OrderedArgumentList
+
+OrderedArgumentList = []
+try:
+    OrderedArgumentList = Arguments.OrderedArgumentList
+except:
+    pass
+
 
 Encoding = 'utf-8'
 # Handle parameter '-e', '--encoding'.
@@ -73,13 +82,22 @@ if Arguments.encoding is not None:
 
 # Handle parameter 'BibTeXFileName'.
 BibTeXFileName = Arguments.BibTeXFileName
+BibTeXDataBase = Classes.DataBase()
+
 if not os.path.isfile(BibTeXFileName):
     print('The file "{0}" does not exist.'.format(BibTeXFileName))
     exit(1)
 
-BibTeXDataBase = Classes.DataBase()
+if Arguments.recover:
+    BibTeXDataBase.Recover(BibTeXFileName)
+    exit(0)
+
+BibTeXDataBase.Backup(BibTeXFileName)
+
 if not BibTeXDataBase.Load(BibTeXFileName, Encoding):
     exit(1)
+
+
 
 OutputFileName = BibTeXFileName
 LogFileName = BibTeXFileName + '.log'

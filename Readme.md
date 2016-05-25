@@ -17,8 +17,9 @@ A typical BibTeX file is shown as follows.
     BibTeXTools.py [-h] [-d [tag [tag ...]]] [-f [tag [tag ...]]]
                    [--clearempty [tag [tag ...]]]
                    [-r oldtagname newtagname] [-c tagname1 tagname2]
-                   [-o file name] [-l] [--logfile file name] [-e encoding]
-                   [-v]
+                   [--downloadfullpapers] [--fullpaper directory]
+                   [-o file name] [-l] [--recover] [--logfile file name]
+                   [-e encoding] [-v]
                    BibTeXFileName
 
 ### Options
@@ -31,6 +32,7 @@ A typical BibTeX file is shown as follows.
 * `-o file name`, `--output file name`<br> set the name of the output file, if this option is not specified, the database will be overwrited.
 * `-l`, `--log`<br> save log file.
 * `--logfile file name`<br> set the name of the output file, if this option is not specified, the name of log file will be BibTeXFileName.log.
+* `--recover`<br> recover the BibTeX file from recent edition, if his option is specified, the other options will be ignored.
 * `-e encoding`, `--encoding encoding`<br> set the encoding of the input file, if this option is not specified, the encoding is utf-8.
 * `-v`, `--version`<br> show the version of **BibTeXTools**.
 
@@ -66,6 +68,10 @@ Rename the `Url` tag to the `Link` tag of each entry in the `References.bib`, if
 Copy the `Url` tag to the `Link` tag of each entry in the `References.bib`, and clear the empty `Link` tags in the `References.bib`.
 
     BibTeXTools.py References.bib -c Url Link --clearempty Link -l
+
+Recover the `References.bib` from the backup file `References.bib.bkp`.
+
+    BibTeXTools.py References.bib --recover
 
 
 ## Built with

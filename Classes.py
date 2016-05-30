@@ -204,7 +204,14 @@ class DataBase:
                     while True:
                         try:
                             Request = requests.get(URL, timeout=TimeOut)
-                            Entry.TagList['url'] = Request.url
+                            if 'ieeexplore.ieee.org' in Request.url.lower():
+                                HTMLParser = HTMLParsers.IEEEXplore()
+                                if HTMLParser.Parse(Request.url):
+                                    Entry.TagList['url'] = HTMLParser.FullPaperPath
+                                else:
+                                    self.Commit('  |-Could not fetch the Url tag of {0} {1}.'.format(Entry.Type, Entry.CitationKey))
+                            else:
+                                self.Commit('  |-This kind of Url is not supported.')
                             break
                         except:
                             TimeOut += 1

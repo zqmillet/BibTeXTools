@@ -4,4 +4,4 @@ def GetFullDoiUrl(Doi):
     elif Doi.lower().startswith('https://'):
         return Doi
     else:
-        return 'http://dx.doi.org/' + Doi.strip('/')
+        return 'https://doi.org/' + Doi.strip('/')
